@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      # Mount source for development — code changes reflect without rebuild
+      - .:/var/www/html
+      # Keep vendor installed inside the container (not overwritten by the mount)
+      - /var/www/html/vendor
+    networks:
+      - bts_network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-bts}
+      MYSQL_USER: ${DB_USERNAME:-bts_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - bts_network
+
+volumes:
+  mysql_data:
+
+networks:
+  bts_network:
+    driver: bridge

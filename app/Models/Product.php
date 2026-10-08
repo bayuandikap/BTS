@@ -21,11 +21,8 @@ class Product extends Model
         'updated_by_id',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'images' => 'array',
-            'price'  => 'float',
-        ];
-    }
+    protected $casts = [
+        'images' => 'array',
+        'price'  => 'float',
+    ];
 }

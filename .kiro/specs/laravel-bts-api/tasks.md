@@ -118,19 +118,19 @@ Tasks are ordered: Docker scaffold → migrations/models → auth → product CR
     - _Requirements: 10.1, 10.2, 10.3, 10.4_
 
 - [ ] 6. Wire routes in `routes/api.php`
-  - [~] 6.1 Define all API routes
+  - [ ] 6.1 Define all API routes
     - Auth group (no middleware): `POST /api/auth/register` → `AuthController@register`, `POST /api/auth/login` → `AuthController@login`
     - Products public group (no middleware): `GET /api/products` → `index`, `GET /api/products/{id}` → `show`
     - Products protected group (`auth:sanctum`): `POST /api/products` → `store`, `PUT /api/products/{id}` → `update`, `DELETE /api/products/{id}` → `destroy`
     - _Requirements: 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1_
 
 - [ ] 7. Configure CORS and exception handling
-  - [~] 7.1 Configure `config/cors.php`
+  - [ ] 7.1 Configure `config/cors.php`
     - `paths = ['api/*']`, `allowed_methods = ['*']`, `allowed_origins = ['*']`, `allowed_headers = ['*']`, `supports_credentials = false`
     - Confirm `HandleCors` is in the global middleware stack (it is by default in Laravel 11's `bootstrap/app.php`)
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [~] 7.2 Customise exception handler in `bootstrap/app.php`
+  - [ ] 7.2 Customise exception handler in `bootstrap/app.php`
     - Use `$exceptions->render()` to return JSON for:
       - `ValidationException` → 422 with `{ message, errors }`
       - `AuthenticationException` → 401 with `{ message: 'Unauthenticated.' }`
@@ -140,20 +140,20 @@ Tasks are ordered: Docker scaffold → migrations/models → auth → product CR
     - _Requirements: 4.3, 5.3, 7.3, 8.4, 9.4, 10.3_
 
 - [ ] 8. Add Swagger configuration and generate docs
-  - [~] 8.1 Install `darkaonline/l5-swagger` and publish config
+  - [ ] 8.1 Install `darkaonline/l5-swagger` and publish config
     - `composer require darkaonline/l5-swagger`
     - `php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"`
     - In `config/l5-swagger.php`: set `api.title`, `routes.api = 'api/documentation'`, `generate_always = true` for non-production
     - _Requirements: 3.1, 3.4_
 
-  - [~] 8.2 Verify all controller annotations are complete
+  - [ ] 8.2 Verify all controller annotations are complete
     - Confirm `@OA\Info`, `@OA\SecurityScheme` (bearerAuth) exist in `AuthController`
     - Confirm all 7 endpoints have `@OA\Get`/`@OA\Post`/`@OA\Put`/`@OA\Delete` blocks with request bodies, query params, and all response codes (200/201, 401, 404, 422)
     - Run `php artisan l5-swagger:generate` and confirm no errors
     - _Requirements: 3.2, 3.3, 3.4_
 
 - [ ] 9. Write `README.md`
-  - [~] 9.1 Create `README.md`
+  - [ ] 9.1 Create `README.md`
     - Sections: prerequisites (Docker, Docker Compose), quick start (`cp .env.example .env && docker-compose up --build`), environment variables, API endpoint reference table, example `curl` commands for all endpoints, link to Swagger UI at `http://localhost:8000/api/documentation`
     - _Requirements: 1.3_
 

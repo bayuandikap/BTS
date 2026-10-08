@@ -1,15 +1,24 @@
 #!/bin/bash
 set -e
 
-echo "==> Waiting for MySQL to be ready..."
-until php -r "new PDO('mysql:host=${DB_HOST:-db};port=${DB_PORT:-3306};dbname=${DB_DATABASE:-bts}', '${DB_USERNAME:-bts_user}', '${DB_PASSWORD:-secret}');" 2>/dev/null; do
-    echo "    MySQL not ready yet — retrying in 2 s..."
+echo "Waiting for MySQL to be ready..."
+until mysqladmin ping -h "${DB_HOST:-db}" -u "${DB_USERNAME:-bts_user}" -p"${DB_PASSWORD:-bts_password}" --silent 2>/dev/null; do
+    echo "MySQL is not ready yet. Retrying in 2 seconds..."
     sleep 2
 done
-echo "==> MySQL is ready."
+echo "MySQL is ready."
 
-echo "==> Running migrations..."
+# Generate app key if not set
+if [ -z "$APP_KEY" ]; then
+    echo "Generating application key..."
+    php artisan key:generate --force
+fi
+
+echo "Running migrations..."
 php artisan migrate --force
 
-echo "==> Starting Laravel development server on 0.0.0.0:8000 ..."
-php artisan serve --host=0.0.0.0 --port=8000
+echo "Generating Swagger docs..."
+php artisan l5-swagger:generate || echo "Swagger generation skipped."
+
+echo "Starting Laravel server on port 8000..."
+exec php artisan serve --host=0.0.0.0 --port=8000
